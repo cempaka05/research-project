@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus in Agro-Product Tech: Oil Palm Yield Dynamics</title>
+    <!-- Tailwind CSS for modern, clean styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js for canvas-based visualization and interpolation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+
+    <!-- Header Banner -->
+    <header class="bg-emerald-800 text-white py-8 px-6 shadow-md">
+        <div class="max-w-6xl mx-auto">
+            <span class="bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wider">Malaysian Bioscience Case Study</span>
+            <h1 class="text-3xl font-extrabold mt-2">Optimizing Tenera Oil Palm FFB Yield Trajectories</h1>
+            <p class="text-emerald-100 mt-1 text-sm md:text-base">Applying First Derivatives to Determine Peak Productivity Windows in Agro-Product Technology</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Column: Bioscience Scenario Context & Math -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Context Card -->
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 border-b pb-2 mb-3 flex items-center gap-2">
+                    <span>🌱</span> Bioscience Scenario
+                </h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    In Agro-Product plantations throughout Malaysia, managing the lifetime yield profile of *Elaeis guineensis* (Tenera variety) is vital for supply chain stability. After field planting, young palms produce small fruit bunches. Yield increases exponentially, then hits an inflection point before tapering off due to canopy crowding and senescence (aging).
+                </p>
+                <div class="mt-3 bg-slate-50 p-3 rounded-lg border border-slate-100 text-xs text-slate-500">
+                    <strong>Data Background:</strong> Based on historical growth curves reported by the <em>Malaysian Palm Oil Board (MPOB)</em> and mathematical models from the <em>Journal of Mathematics and Statistics</em> ("Nonlinear Growth Models for Modeling Oil Palm Yield Growth").
+                </div>
+            </div>
+
+            <!-- Mathematical Modeling Card -->
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 border-b pb-2 mb-3">
+                    📐 The Mathematical Model
+                </h2>
+                <p class="text-sm text-slate-600 mb-4">
+                    The yield accumulation over time $t$ (years) can be accurately mapped using a modified logistic function:
+                </p>
+                
+                <!-- Equations Display -->
+                <div class="space-y-4 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+                    <div>
+                        <span class="block text-xs font-semibold text-emerald-800 uppercase tracking-wider">Yield Function f(t):</span>
+                        <div class="text-lg font-mono font-bold text-slate-900 my-1">
+                            Y(t) = 28 / (1 + e<sup>-0.45(t - 7)</sup>)
+                        </div>
+                        <span class="text-xs text-slate-500 block">Where 28 tonnes/ha is the asymptotic maximum yield, and t represents palm age (years).</span>
+                    </div>
+                    
+                    <hr class="border-emerald-100">
+
+                    <div>
+                        <span class="block text-xs font-semibold text-emerald-800 uppercase tracking-wider">First Derivative f'(t):</span>
+                        <div class="text-sm font-mono font-bold text-slate-900 my-1 bg-white p-2 rounded border border-emerald-200 overflow-x-auto">
+                            dY/dt = 12.6 · e<sup>-0.45(t - 7)</sup> / (1 + e<sup>-0.45(t - 7)</sup>)<sup>2</sup>
+                        </div>
+                        <span class="text-xs text-slate-500 block">Represents the instantaneous yield growth rate (tonnes per hectare per single year).</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Graph & Live Telemetry Panel -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Graph Box -->
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Interactive Dynamic Trajectory</h2>
+                        <p class="text-xs text-slate-500">Click anywhere inside the chart region to isolate coordinates and run instantaneous calculus analysis</p>
+                    </div>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full border border-blue-200">
+                        Chart.js Animation Active
+                    </span>
+                </div>
+
+                <!-- Canvas Component Wrapper -->
+                <div class="relative min-h-[320px] md:min-h-[400px] w-full">
+                    <canvas id="yieldChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Calculus Output & Layman Breakdown Panel -->
+            <div id="telemetryPanel" class="bg-slate-900 text-slate-100 p-6 rounded-xl shadow-lg transition-all duration-300 border border-slate-800 relative overflow-hidden">
+                <!-- Decorative background accent -->
+                <div class="absolute right-0 bottom-0 text-slate-800 font-bold text-9xl translate-x-10 translate-y-10 select-none pointer-events-none font-mono">f'</div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+                        <h3 class="text-sm uppercase tracking-widest text-slate-400 font-bold">Real-time Calculus Telemetry Node</h3>
+                    </div>
+
+                    <!-- Initial Default Instructions / Changes on User Interaction -->
+                    <div id="defaultPrompt" class="text-center py-4">
+                        <p class="text-slate-300 text-base">👈 Please tap or click anywhere on the graph curves above.</p>
+                        <p class="text-xs text-slate-500 mt-1">The app will evaluate the exact point and display structural derivative breakdowns.</p>
+                    </div>
+
+                    <div id="calculusResults" class="hidden space-y-4">
+                        <!-- Top Numerical Metrics Row -->
+                        <div class="grid grid-cols-3 gap-2 bg-slate-800/80 p-3 rounded-lg border border-slate-700">
+                            <div>
+                                <span class="text-[10px] uppercase text-slate-400 block">Selected Age (t)</span>
+                                <span id="valT" class="text-xl font-bold text-white font-mono">-</span> <span class="text-xs text-slate-400">yrs</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase text-slate-400 block">Current Yield f(t)</span>
+                                <span id="valY" class="text-xl font-bold text-emerald-400 font-mono">-</span> <span class="text-xs text-slate-400">t/ha</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase text-slate-400 block">Growth Rate f'(t)</span>
+                                <span id="valDeriv" class="text-xl font-bold text-amber-400 font-mono">-</span> <span class="text-xs text-slate-400">t/ha/yr</span>
+                            </div>
+                        </div>
+
+                        <!-- Plain English Evaluation Paragraph -->
+                        <div class="bg-slate-800/40 p-4 rounded-lg border border-slate-700/50">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-1">Layman Bioscience Breakdown</h4>
+                            <p id="laymanText" class="text-sm text-slate-200 leading-relaxed font-normal">
+                                Select an age coordinate above to generate diagnostic insights.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="max-w-6xl mx-auto mt-12 mb-6 px-6 text-center text-xs text-slate-400 border-t border-slate-200 pt-4">
+        Designed for SFP: Agro Product Technology Core Syllabus Modules • Compiled using Chart.js v4
+    </footer>
+
+    <!-- Interactive Web Application Logic Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('yieldChart').getContext('2d');
+            
+            // Generate Data Vectors based on mathematical functions
+            const timePoints = [];
+            const yieldValues = [];
+            const derivativeValues = [];
+
+            // Domain setup: t from year 2 to year 20 to isolate standard commercial lifecycles
+            for (let t = 2; t <= 20; t += 0.5) {
+                timePoints.push(t);
+                
+                // Primary Function Vector Evaluation: Y(t) = 28 / (1 + e^(-0.45 * (t - 7)))
+                const expTerm = Math.exp(-0.45 * (t - 7));
+                const y = 28 / (1 + expTerm);
+                yieldValues.push(y);
+
+                // Derivative Function Vector Evaluation: dY/dt = (12.6 * expTerm) / ((1 + expTerm)^2)
+                const dy = (12.6 * expTerm) / Math.pow((1 + expTerm), 2);
+                derivativeValues.push(dy);
+            }
+
+            // Initialize Configured Chart.js Instance
+            const yieldChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timePoints,
+                    datasets: [
+                        {
+                            label: 'Total FFB Yield: f(t) (Tonnes/Hectare)',
+                            data: yieldValues,
+                            borderColor: '#047857', // Emerald 700
+                            backgroundColor: 'rgba(4, 120, 87, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: "Absolute Growth Rate: f'(t) (Tonnes/Ha/Year)",
+                            data: derivativeValues,
+                            borderColor: '#fbbf24', // Amber 400
+                            borderDash: [5, 5],
+                            borderWidth: 2.5,
+                            fill: false,
+                            tension: 0.2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { font: { weight: 'bold', size: 11 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label.split(':')[0] || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    // Dual-Y Axis Configuration for disparate scale tracking
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Oil Palm Plantation Age (t in Years)',
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Cumulative FFB Yield (Tonnes / Hectare)',
+                                font: { weight: 'bold', color: '#047857' }
+                            },
+                            min: 0,
+                            max: 30,
+                            grid: { color: '#e2e8f0' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Instantaneous Acceleration Rate (Tonnes/Ha/Year)',
+                                font: { weight: 'bold', color: '#d97706' }
+                            },
+                            min: 0,
+                            max: 4,
+                            grid: { drawOnChartArea: false } // Avoid secondary grid clutter lines
+                        }
+                    },
+                    // Animation Settings to visually represent data assembly trends
+                    animations: {
+                        tension: {
+                            duration: 1200,
+                            easing: 'linear',
+                            from: 1,
+                            to: 0.2,
+                            loop: false
+                        }
+                    },
+                    onClick: (e) => {
+                        handleChartClick(e);
+                    }
+                }
+            });
+
+            // Handle Intersection Extraction Logic on User Event
+            function handleChartClick(event) {
+                const points = yieldChart.getElementsAtEventForMode(event, 'index', { intersect: false }, true);
+                
+                if (points.length > 0) {
+                    const index = points[0].index;
+                    const selectedAge = timePoints[index];
+                    const currentYield = yieldValues[index];
+                    const currentDerivative = derivativeValues[index];
+
+                    updateTelemetryPanel(selectedAge, currentYield, currentDerivative);
+                }
+            }
+
+            // Calculations Rendering Engine and Plain English Translator
+            function updateTelemetryPanel(age, yieldVal, derivativeVal) {
+                // UI Elements Mapping
+                document.getElementById('defaultPrompt').classList.add('hidden');
+                document.getElementById('calculusResults').classList.remove('hidden');
+
+                document.getElementById('valT').innerText = age.toFixed(1);
+                document.getElementById('valY').innerText = yieldVal.toFixed(2);
+                document.getElementById('valDeriv').innerText = derivativeVal.toFixed(2);
+
+                const textElement = document.getElementById('laymanText');
+                let interpretation = "";
+
+                // Branching Logic for Context Interpretations based on mathematical inflection ranges
+                if (age < 5) {
+                    interpretation = `At ${age.toFixed(1)} years, this represents the <strong>Early Immature Phase</strong>. The trees are small, but they are expanding their structural architecture. The derivative value ($f'(t) = ${derivativeVal.toFixed(2)}$) is low but growing. This means your harvest yields are accelerating year-over-year. Focus on heavy vegetative fertilizer applications right now.`;
+                } else if (age >= 5 && age < 8) {
+                    interpretation = `At ${age.toFixed(1)} years, your plantation is entering its <strong>Exponential Peak Growth Acceleration Window</strong>. Notice how the derivative line rises toward its peak. The yield curve is steepest here. At year 7.0 ($f''(t) = 0$), the tree reaches its absolute highest biological expansion velocity of **3.15 Tonnes/Ha/Year**. This is the highest utilization efficiency period for soil nutrient uptake.`;
+                } else if (age >= 8 && age <= 12) {
+                    interpretation = `At ${age.toFixed(1)} years, the block is in its <strong>Mature Stabilized Phase</strong>. While total cumulative yield ($f(t) = ${yieldVal.toFixed(2)}$ Tonnes) remains exceptionally high, the derivative value has started dropping ($f'(t) = ${derivativeVal.toFixed(2)}$). This means each passing year still adds fruit, but the <em>rate of increase is slower</em> than the year before due to canopy crowding. Maintain steady maintenance dosing.`;
+                } else {
+                    interpretation = `At ${age.toFixed(1)} years, this is a <strong>Late Plateau / Senescence State</strong>. Total yield approaches its maximum asymptote ($f(t) \\rightarrow 28$ Tonnes), causing the derivative $f'(t)$ to trend close to zero ($${derivativeVal.toFixed(2)}$). Growth has almost entirely leveled off. From an agro-economic perspective, this signals that you should prepare to transition resources toward replanting or alternative plot operations.`;
+                }
+
+                textElement.innerHTML = interpretation;
+            }
+        });
+    </script>
+</body>
+</html>
